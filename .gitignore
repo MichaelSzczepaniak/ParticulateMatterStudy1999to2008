@@ -1,0 +1,13 @@
+# figure folder is just for README.md illustrations
+figure/
+# odt is my copy of the requirements
+*.odt
+# push up the data once to have it archived, then ignore
+*.zip
+# preface file just used to check stuff with diff: no need to save
+diff*
+# rds files contained in zip, smiley.png is filler, keep R files local
+*.rds
+smiley.png
+*.RData
+*.RHistory
