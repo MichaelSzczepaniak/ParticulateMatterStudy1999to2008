@@ -2,7 +2,8 @@
 - [Introduction](#id-intro)  
 - [Description](#id-description)  
   - [Questions Framing the Inquiry](#id-questions-inquiry)
-  - [Missing Values](#id-missing-values)
+  - [Missing and Unique Values](#id-values)
+  - [Structure and Summary](#id-str-summary)
 - [Making Plots](#id-making-plots)  
 - [References](#id-refs)
 
@@ -32,7 +33,10 @@ The following descriptions of the 6 variables in the dataset are as follows:
 <div id='id-questions-inquiry'/>
 ### Questions Framing the Inquiry
 <ol>
-<li>Have total emissions from PM2.5 decreased in the United States from 1999 to 2008? Using the base plotting system, make a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008.</li>
+<li>Have <b>total</b> emissions from PM2.5 decreased in the United States from 1999 to 2008?
+  <ul>
+    <li>Using the base plotting system, a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008 was constructed as shown in <b><a href="#id-plot1">Plot 1</a></b> below.</li>
+  </ul>
 <li>Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008? Use the base plotting system to make a plot answering this question.</li>
 <li>Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999 - 2008 for Baltimore City? Which have seen increases in emissions from 1999 - 2008? Use the ggplot2 plotting system to make a plot answer this question.</li>
 <li>Across the United States, how have emissions from coal combustion-related sources changed from 1999 - 2008?</li>
@@ -40,13 +44,52 @@ The following descriptions of the 6 variables in the dataset are as follows:
 <li>Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in Los Angeles County, California (fips == "06037"). Which city has seen greater changes over time in motor vehicle emissions?</li>
 </ol>
 
-<div id='id-missing-values'/>
-### Missing Values
+<div id='id-values'/>
+### Missing and Unique Values
 No values appear to missing from the data:
 <pre>
 NEI <- readRDS("summarySCC_PM25.rds")
 any(is.na(NEI))
 [1] FALSE
+</pre>
+
+There is only one type of pollutant in this data:
+<pre>
+> unique(NEI$Pollutant)
+[1] "PM25-PRI"
+</pre>
+
+<div id='id-str-summary'/>
+### Structure and Summary
+<pre>
+> str(NEI)
+'data.frame':	6497651 obs. of  7 variables:
+ $ fips         : chr  "09001" "09001" "09001" "09001" ...
+ $ SCC          : chr  "10100401" "10100404" "10100501" "10200401" ...
+ $ Pollutant    : chr  "PM25-PRI" "PM25-PRI" "PM25-PRI" "PM25-PRI" ...
+ $ Emissions    : num  15.714 234.178 0.128 2.036 0.388 ...
+ $ type         : chr  "POINT" "POINT" "POINT" "POINT" ...
+ $ year         : int  1999 1999 1999 1999 1999 1999 1999 1999 1999 1999 ...
+ $ normEmissions: num  2.43e-05 3.62e-04 1.98e-07 3.15e-06 6.00e-07 ...
+</pre>
+
+<pre>
+> summary(NEI$Emissions)
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+     0.0      0.0      0.0      3.4      0.1     647000.0 
+</pre>  
+Huge spread as well as skew in the data.  Let's take a closer look:
+
+<pre>
+> quantile(NEI$Emissions, probs = seq(0, 1, 0.1))
+          0%          10%          20%          30%          40%          50% 
+0.000000e+00 2.647710e-05 2.557063e-04 1.047860e-03 3.490810e-03 1.000000e-02 
+         60%          70%          80%          90%         100% 
+2.000000e-02 5.990020e-02 1.600000e-01 7.036410e-01 6.469520e+05 
+</pre>  
+Over 90% of the **Emissions** values are < 1.
+
+<pre>
 </pre>
 
 <div id='id-making-plots'/>
@@ -60,6 +103,7 @@ Separate R code files (plot1.R, plot2.R, etc.) were constructed corresponding to
 
 Each PNG file prodused by the code is provided in this repository.  The six plots below attempt to answer the six questions listed above: 
 
+<div id='id-plot1'/>
 ### Plot 1
 ![plot1.png](plot1.png) 
 

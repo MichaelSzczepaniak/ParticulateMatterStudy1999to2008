@@ -9,5 +9,7 @@ diff*
 # rds files contained in zip, smiley.png is filler, keep R files local
 *.rds
 smiley.png
+# temporary plotting code typically of format: plotx.0y.R where x and y are whole numbers
+*0?.R
 *.RData
 *.RHistory
