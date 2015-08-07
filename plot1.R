@@ -11,6 +11,6 @@ barplot(totalEmissions$TotalEmissions/1000000,
         ylab = "Emissions (million tons PM25-PRI)",
         xlab = "Year",
         ylim = c(3, 8), xpd = FALSE,
-        col = "wheat",
+        col = "wheat1",
         main = "Total PM25 Emissions (millions of tons) By Year")
 dev.off()
