@@ -35,14 +35,14 @@ The following descriptions of the 6 variables in the dataset are as follows:
 <ol>
 <li>Have <b>total</b> emissions from PM2.5 decreased in the United States from 1999 to 2008?
   <ul>
-    <li>Using the base plotting system, a plot showing the total PM2.5 emission from all sources for each of the years 1999, 2002, 2005, and 2008 was constructed as shown in <b><a href="#id-plot1">Plot 1</a></b> below.</li>
+    <li>Using the base plotting system, a plot showing the total PM2.5 emissions from all sources for each of the years 1999, 2002, 2005, and 2008 was constructed as shown in <b><a href="#id-plot1">Plot 1</a></b> below.</li>
     <li><b><a href="#id-plot1">Plot 1</a></b> suggests that PM25 emissions have decreased every 3 years from 1999 to 2008.</li>
   </ul>
 </li>
 <li>Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008? Use the base plotting system to make a plot answering this question.
   <ul>
-    <li>stuff</li>
-    <li>stuff</li>
+    <li>Using the base plotting system, a stacked bar chart showing PM2.5 emissions for Baltimore from all sources for each of the years 1999, 2002, 2005, and 2008 by type was constructed as shown in <b><a href="#id-plot2">Plot 1</a></b> below.</li>
+    <li>Total PM2.5 decreased in 3 of the 4 three-year time periods.  A rise in <b>POINT</b> emissions in 2005 caused the overall emissions for 2005 to increase from 2002 levels.  In spite of spike in 2005 emission levels, Baltimore PM2.5 emissions were lower in 2008 than they were in 1999, 2002, or 2005.</li>
   </ul>
 </li>
 <li>Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999 - 2008 for Baltimore City? Which have seen increases in emissions from 1999 - 2008? Use the ggplot2 plotting system to make a plot answer this question.
