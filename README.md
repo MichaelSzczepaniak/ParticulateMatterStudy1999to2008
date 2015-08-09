@@ -41,13 +41,14 @@ The following descriptions of the 6 variables in the dataset are as follows:
 </li>
 <li>Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008? Use the base plotting system to make a plot answering this question.
   <ul>
-    <li>Using the base plotting system, a stacked bar chart showing PM2.5 emissions for Baltimore from all sources for each of the years 1999, 2002, 2005, and 2008 by type was constructed as shown in <b><a href="#id-plot2">Plot 1</a></b> below.</li>
+    <li>A logical follow-up question would be if total emissions had not decreased, what source(s) prevented it?</li>
+    <li>Using the base plotting system, a stacked bar chart showing PM2.5 emissions for Baltimore from all sources for each of the years 1999, 2002, 2005, and 2008 by source type was constructed as shown in <b><a href="#id-plot2">Plot 2</a></b> below.</li>
     <li>Total PM2.5 decreased in 3 of the 4 three-year time periods.  A rise in <b>POINT</b> emissions in 2005 caused the overall emissions for 2005 to increase from 2002 levels.  In spite of spike in 2005 emission levels, Baltimore PM2.5 emissions were lower in 2008 than they were in 1999, 2002, or 2005.</li>
   </ul>
 </li>
-<li>Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999 - 2008 for Baltimore City? Which have seen increases in emissions from 1999 - 2008? Use the ggplot2 plotting system to make a plot answer this question.
+<li>Of the four types of sources indicated by the type (point, nonpoint, onroad, nonroad) variable, which of these four sources have seen decreases in emissions from 1999 - 2008 for Baltimore City? Which have seen increases in emissions from 1999 - 2008? Use the <b>ggplot2</b> plotting system to make a plot answer this question.
 <ul>
-    <li>stuff</li>
+    <li>Using the <b>ggplot2</b> system, a multi-line chart showing PM2.5 emissions for Baltimore from all sources for each of the years 1999, 2002, 2005, and 2008 by source type was constructed as shown in <b><a href="#id-plot3">Plot 3</a></b> below.</li>
     <li>stuff</li>
   </ul>
 </li>
@@ -132,23 +133,27 @@ Each PNG file prodused by the code is provided in this repository.  The six plot
 
 <div id='id-plot1'/>
 ### Plot 1
-![plot1.png](plot1.png) 
+![plot1.png](plot1.png)  
 
+<div id='id-plot2'/>
 ### Plot 2
-![plot2.png](plot2.png) 
+![plot2.png](plot2.png)  
 
+<div id='id-plot3'/>
 ### Plot 3
-![plot3.png](plot3.png) 
+![plot3.png](plot3.png)  
 
-
+<div id='id-plot4'/>
 ### Plot 4
-![plot4](plot4.png) 
+![plot4](plot4.png)  
 
+<div id='id-plot5'/>
 ### Plot 5
-![plot5](plot5.png) 
+![plot5](plot5.png)  
 
+<div id='id-plot6'/>
 ### Plot 6
-![plot6](plot6.png) 
+![plot6](plot6.png)  
 
 <div id='id-refs'/>
 ## References
