@@ -11,6 +11,7 @@ totEmPoint <- filter(totalEmissions, type == "POINT")
 totEmNonPoint <- filter(totalEmissions, type == "NONPOINT")
 totEmOnRoad <- filter(totalEmissions, type == "ON-ROAD")
 totEmNonRoad <- filter(totalEmissions, type == "NON-ROAD")
+# build the matrix to be used for the stacked bar
 emByType <- select(totEmPoint, -type)
 emByType <- rename(emByType, pointEmissions = TotalEmissions)
 x <- totEmNonPoint$TotalEmissions
@@ -23,12 +24,12 @@ bars <- t(as.matrix(emByType))
 colnames(bars) <- bars[1, ]
 bars <- bars[c(2:5), ]
 cnames <- c("POINT", "NONPOINT", "ON-ROAD", "NON-ROAD") #names(emByType)[2:5]
-# create/write output png. Use size is 480 x 480 pixels, but be explicit
+# create/write output png: 720 x 480 pixels
 png(file = "plot2.png", width = 720, height = 480, units = "px")
-barColors <- brewer.pal(4, "Dark2")
+barColors <- brewer.pal(4, "Dark2")  # one of the SEQUENTIAL pallettes
 barplot(bars/1000,
         names.arg = emByType$year,
-        ylab = "Emissions (thousand tons PM25-PRI)",
+        ylab = "Emissions (1,000 tons PM25-PRI)",
         xlab = "Year",
         ylim = c(0, 3.5), xpd = FALSE,
         col = c(barColors[1], barColors[2], barColors[3], barColors[4]),
