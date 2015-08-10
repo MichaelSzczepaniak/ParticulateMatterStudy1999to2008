@@ -3,15 +3,18 @@
 ## from 1999 through 2008.  For details see:
 ## https://github.com/MichaelSzczepaniak/ParticulateMatterStudy1999to2008
 ##
+## The criteria used for determining which records are considered "coal
+## combustion-related" is any records with an EI.Sector field value that
+## starts with "fuel comb -" and ends with "- coal" as described in this post:
+##
+## https://class.coursera.org/exdata-031/forum/thread?thread_id=60&utm_medium=email&utm_source=other&utm_campaign=notifications.auto.sEvfXj7QEeWn8yIAC45P7Q#comment-169
+##
 library(dplyr)
 library(ggplot2)
 library(scales)
 NEI <- readRDS("summarySCC_PM25.rds")
 sourceClasses <- readRDS("Source_Classification_Code.rds")
-# get indices of coal combustion-related sources from Al Warren's post at:
-# https://class.coursera.org/exdata-031/forum/thread?
-# thread_id=60&utm_medium=email&utm_source=other&
-# utm_campaign=notifications.auto.sEvfXj7QEeWn8yIAC45P7Q#comment-169
+# get indices of coal combustion-related sources as described above
 coalCombIndices <- grep("^fuel comb -(.*)- coal$",
                         sourceClasses$EI.Sector, ignore.case=T)
 sccValues <- sourceClasses$SCC[coalCombIndices]
