@@ -1,3 +1,8 @@
+##
+## Generates a stacked barplot of the total Baltimore city PM25 emissions by
+## source type from 1999 through 2008.  For details see:
+## https://github.com/MichaelSzczepaniak/ParticulateMatterStudy1999to2008
+##
 library(dplyr)
 library(RColorBrewer)
 ##

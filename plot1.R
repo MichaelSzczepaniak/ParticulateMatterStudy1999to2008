@@ -1,5 +1,10 @@
-library(dplyr)
 ##
+## Generates a barplot of the total US PM25 emissions from 1999 through 2008.
+## For details see:
+## https://github.com/MichaelSzczepaniak/ParticulateMatterStudy1999to2008
+##
+library(dplyr)
+
 NEI <- readRDS("summarySCC_PM25.rds")
 # create/write output png: 720 x 480 pixels
 png(file = "plot1.png", width = 720, height = 480, units = "px")
@@ -12,5 +17,5 @@ barplot(totalEmissions$TotalEmissions/1000000,
         xlab = "Year",
         ylim = c(3, 8), xpd = FALSE,
         col = "wheat1",
-        main = "Total PM25 Emissions (millions of tons) By Year")
+        main = "Total US PM25 Emissions (millions of tons) By Year")
 dev.off()
