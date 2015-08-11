@@ -28,7 +28,6 @@ emissionsCoal <- summarise(neiCoalCombByYear,
                            Total_Emissions = sum(Emissions, na.rm = TRUE))
 emissionsCoal <- mutate(emissionsCoal, Source = "Coal Combustion Sources")
 emissionsCoal <- emissionsCoal[, c(1, 3, 2)]
-emissionsCoal <- mutate(emissionsCoal, Total_Emissions = Total_Emissions)
 emissionsNonCoal <- summarize(neiNonCoalByYear,
                               Total_Emissions = sum(Emissions, na.rm = TRUE))
 emissionsNonCoal <- mutate(emissionsNonCoal,
