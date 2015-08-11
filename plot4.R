@@ -51,7 +51,6 @@ plot <- plot + scale_x_continuous(breaks=seq(1999, 2008, 3))
 # use log10 scale on y so we can better see how both groups trend
 plot <- plot + coord_trans(y="log10")
 plot <- plot + labs(y = expression(PM[2.5] * "Emissions (in tons)"))
-#plot <- plot + labs(y = "Emissions (in tons)")
 # make the fonts a bigger so everything is more readable
 plot <- plot + theme(text = element_text(size=20),
                      axis.text.x = element_text(angle=90, vjust=1))
