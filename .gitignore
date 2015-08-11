@@ -11,5 +11,7 @@ diff*
 smiley.png
 # temporary plotting code typically of format: plotx.0y.R where x and y are whole numbers
 *0?.R
+# other files that never needed tracking
+sandbox.R
 *.RData
 *.RHistory

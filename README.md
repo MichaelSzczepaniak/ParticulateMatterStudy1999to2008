@@ -14,7 +14,7 @@ Fine particulate matter (PM2.5) is an ambient air pollutant for which there is s
 This project uses data from the <a href="http://www.epa.gov/ttn/chief/eiinformation.html">EPA National Emissions Inventory website</a>.
 In particular, it uses data from the years 1999, 2002, 2005, and 2008.  A copy of this dataset is available in this repo at:  
 
-* <b>Dataset</b>: <a href="https://tbd">Electric power consumption</a> [30Mb]
+* <b>Dataset</b>: <a href="https://github.com/MichaelSzczepaniak/ParticulateMatterStudy1999to2008/blob/master/exdata_data_NEI_data.zip">Electric power consumption</a> [30Mb]
 
 <div id='id-description'/>
 ## Description
@@ -70,8 +70,9 @@ The following descriptions of the 6 variables in the dataset are as follows:
 </li>
 <li>Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in Los Angeles County, California (fips == "06037"). Which city has seen greater changes over time in motor vehicle emissions?
 <ul>
-    <li>stuff</li>
-    <li>stuff</li>
+    <li>The criteria used for determine which records are considered "motor vehicle sources" is any record with an <b>EI.Sector</b> field value that contains the string "mobile" followed by the string "road" ignoring case.</li>
+    <li>Using the <b>ggplot2</b> system, a 1 x 2 panel plot showing PM2.5 emissions normalized to 1999 levels for both Baltimore city and Los Angeles county for each of the years 1999, 2002, 2005, and 2008 was constructed as shown in <b><a href="#id-plot6">Plot 6</a></b> below.</li>
+    <li>Baltimore emissions declined durng each of the 3 year periods between 1999 and 2008.  Los Angeles county emissions increased from 1999 to 2002 and again from 2002 to 2005 before showing it first decrease from 2005 to 2008 to a level that was still above its 1999 level.</li>
   </ul>
 </li>
 </ol>

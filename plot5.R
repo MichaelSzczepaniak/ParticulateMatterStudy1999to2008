@@ -1,5 +1,5 @@
 ##
-## Contructs a stacked bar plot of the Baltimore PM2.5 emissions by year and 
+## Constructs a stacked bar plot of the Baltimore PM2.5 emissions by year and 
 ## Road type.  For details see:
 ## https://github.com/MichaelSzczepaniak/ParticulateMatterStudy1999to2008
 ##
