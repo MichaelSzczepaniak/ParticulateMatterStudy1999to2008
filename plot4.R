@@ -37,8 +37,6 @@ emissionsNonCoal <- emissionsNonCoal[, c(1, 3, 2)]
 # combine the coal and non-coal data so we can plot them together
 emissionsCombined <- rbind(emissionsCoal, emissionsNonCoal)
 emissionsCombined <- rename(emissionsCombined, Year = year)
-emissionsCombined <- mutate(emissionsCombined,
-                            Total_Emissions = Total_Emissions)
 emissionsCombined <- arrange(emissionsCombined, desc(Source), Year)
 emissionsCombined <- mutate(emissionsCombined, Source = factor(Source))
 # generate the plot
