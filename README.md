@@ -55,13 +55,15 @@ The following descriptions of the 6 variables in the dataset are as follows:
 </li>
 <li>Across the United States, how have emissions from coal combustion-related sources changed from 1999 - 2008?
 <ul>
+    <li>The criteria used for determining which records are considered "coal combustion-related" is any records with an <b>EI.Sector</b> field value that starts with "fuel comb -" and ends with "- coal" ignoring case.
+    </li>
     <li>Using the <b>ggplot2</b> system, a 1 x 2 panel plot showing PM2.5 emissions for both coal combustion-related and non-coal sources for each of the years 1999, 2002, 2005, and 2008 was constructed as shown in <b><a href="#id-plot4">Plot 4</a></b> below.</li>
     <li>Although coal combustion-related emissions rose slightly from 2002 to 2005, over the 1999 to 2008 period, they had fallen significantly.  Emissions from non-coal sources had fallen over each 3 year period between 1999 and 2008 as well.</li>
   </ul>
 </li>
 <li>How have emissions from motor vehicle sources changed from 1999 - 2008 in Baltimore City?
 <ul>
-    <li>stuff</li>
+    <li>The criteria used for determine which records are considered "motor vehicle sources" is any record with an <b>EI.Sector</b> field value that contains the string "mobile" followed by the string "road" ignoring case.</li>
     <li>stuff</li>
   </ul>
 </li>
