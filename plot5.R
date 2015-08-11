@@ -32,5 +32,11 @@ png(file = "plot5.png", width = 720, height = 480, units = "px")
 g <- ggplot(mvBaltSummary,
             aes(x = factor(Year), y = Total_Emissions, fill = Road_Type))
 plot <- g + geom_bar(stat = "identity")
+plot <- plot + ggtitle(expression("Baltimore " * PM[2.5] *
+                                  " Motor Vehicle Emissions By Road Type"))
+plot <- plot + labs(x = "Year")
+plot <- plot + labs(y = expression(PM[2.5] * "Emissions (in tons)"))
+plot <- plot + theme(text = element_text(size=20))
+plot <- plot + theme(legend.justification=c(1,1), legend.position=c(1,1))
 print(plot)
 dev.off()

@@ -64,7 +64,8 @@ The following descriptions of the 6 variables in the dataset are as follows:
 <li>How have emissions from motor vehicle sources changed from 1999 - 2008 in Baltimore City?
 <ul>
     <li>The criteria used for determine which records are considered "motor vehicle sources" is any record with an <b>EI.Sector</b> field value that contains the string "mobile" followed by the string "road" ignoring case.</li>
-    <li>stuff</li>
+    <li>Using the <b>ggplot2</b> system, a stacked bar chart showing PM2.5 emissions for both NON-ROAD and ON-ROAD types for each of the years 1999, 2002, 2005, and 2008 was constructed as shown in <b><a href="#id-plot5">Plot 5</a></b> below.</li>
+    <li>The chart shows that the overall vehicle emissions has fallen in each of the periods between 1999 and 2008 and that most of this decline has been driven by the fall in ON-ROAD emissions</li>
   </ul>
 </li>
 <li>Compare emissions from motor vehicle sources in Baltimore City with emissions from motor vehicle sources in Los Angeles County, California (fips == "06037"). Which city has seen greater changes over time in motor vehicle emissions?
