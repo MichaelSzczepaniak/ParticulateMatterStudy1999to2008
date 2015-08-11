@@ -1,6 +1,6 @@
 ##
-## 
-## For details see:
+## Contructs a stacked bar plot of the Baltimore PM2.5 emissions by year and 
+## Road type.  For details see:
 ## https://github.com/MichaelSzczepaniak/ParticulateMatterStudy1999to2008
 ##
 ## The criteria used for determine which records are considered
@@ -10,7 +10,7 @@
 library(dplyr)
 library(ggplot2)
 library(scales)
-#NEI <- readRDS("summarySCC_PM25.rds")
+NEI <- readRDS("summarySCC_PM25.rds")
 sourceClasses <- readRDS("Source_Classification_Code.rds")
 
 motorVehicleIndices <- grep("(mobile)(.*)(road)",
