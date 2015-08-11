@@ -22,7 +22,8 @@ motorVehicleBalt <- filter(motorVehicleBalt, SCC %in% sccValues)
 motorVehicleBalt <- group_by(motorVehicleBalt, year, type)
 mvBaltSummary <- summarise(motorVehicleBalt,
                            Total_Emissions = sum(Emissions, na.rm = TRUE))
-#mvBaltSummary <- mutate(mvBaltSummary, type = factor(type))
+# Need to ungroup before reordering with arrange per:
+# http://stackoverflow.com/questions/27207963/arrange-not-working-on-grouped-dataframe
 mvBaltSummary <- ungroup(mvBaltSummary)
 mvBaltSummary <- arrange(mvBaltSummary, type)
 mvBaltSummary <- rename(mvBaltSummary, Year = year)
