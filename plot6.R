@@ -10,7 +10,34 @@
 ##
 library(dplyr)
 library(ggplot2)
-#library(grid)
+
+## Load function that normalizes the NEI dataframe by grabbing records with
+## sources that are common across the years 1999, 2002, 2005, 2008.
+## This function is not being called because when it is, all ON-ROAD sources
+## get dropped due to these sources not existing in 2008.  I leave the code in
+## because I believe it is the more correct way to do the analysis, but from
+## the discussion boards, no one else seems to be doing it this way so I don't
+## want to cause any confusion when peer review time comes around.
+normalizeNEI <- function(nei) {
+    nei1999 <- filter(nei, year == 1999)
+    scc1999 <- unique(nei1999$SCC)
+    nei2002 <- filter(nei, year == 2002)
+    scc2002 <- unique(nei2002$SCC)
+    nei2005 <- filter(nei, year == 2005)
+    scc2005 <- unique(nei2005$SCC)
+    nei2008 <- filter(nei, year == 2008)
+    scc2008 <- unique(nei2008$SCC)
+    sccCommon <- intersect(scc1999, scc2002)
+    sccCommon <- intersect(sccCommon, scc2005)
+    sccCommon <- intersect(sccCommon, scc2008)
+    # sccCommon contains only the sources common to all 4 time periods
+    normalizedNEI <- filter(nei, SCC %in% sccCommon)
+    
+    return(normalizedNEI)
+}
+
+# Start processing: Read the particulate and classification codes data.
+#NEI <- normalizeNEI(readRDS("summarySCC_PM25.rds"))
 NEI <- readRDS("summarySCC_PM25.rds")
 sourceClasses <- readRDS("Source_Classification_Code.rds")
 # get indices of motor vehicle sources as described above
@@ -53,19 +80,23 @@ emissionsCombined <- arrange(emissionsCombined, desc(City), Year)
 emissionsCombined <- mutate(emissionsCombined, City = factor(City))
 # generate the plot
 png(file = "plot6.png", width = 720, height = 480, units = "px")
-g <- ggplot(emissionsCombined, aes(x = Year, y = (Normalized_Emissions)))
+g <- ggplot(emissionsCombined,
+            aes(x = Year, y = Normalized_Emissions, shape = City, group = City))
 plot <- g + geom_point(size = 4)
+plot <- plot + geom_smooth(size=1, linetype=3, method="lm", se=FALSE)
 plot <- plot + facet_grid(. ~ City) + geom_line()
 plot <- plot + ggtitle(expression(PM[2.5] * " Emissions Normalized to 1999:" *
                                   " Baltimore vs. Los Angeles"))
 plot <- plot + coord_cartesian(xlim=c(1998, 2009))
 plot <- plot + scale_x_continuous(breaks=seq(1999, 2008, 3))
-plot <- plot +scale_y_continuous(breaks=c(seq(0.2, 1.2, 0.2)))
+plot <- plot + scale_y_continuous(breaks=c(seq(0.2, 1.2, 0.2)))
 plot <- plot + labs(y = expression(PM[2.5] *
                                    " Emissions(year) / Emissions(year = 1999))"))
 # make the fonts a bigger so everything is more readable
 plot <- plot + theme(text = element_text(size=16),
                      axis.text.x = element_text(angle=90, vjust=1))
+plot <- plot + theme(legend.justification=c(0.5,0.5),
+                     legend.position=c(0.5,0.5))
 # Add 1999 information as free text annotations.  This was not trivial to do.
 # This post really helped: https://trinkerrstuff.wordpress.com/2012/09/01/
 # Trick is to build up a dataframe (dat in this case) to pass to geom_text.
