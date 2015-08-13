@@ -85,8 +85,9 @@ g <- ggplot(emissionsCombined,
 plot <- g + geom_point(size = 4)
 plot <- plot + geom_smooth(size=1, linetype=3, method="lm", se=FALSE)
 plot <- plot + facet_grid(. ~ City) + geom_line()
-plot <- plot + ggtitle(expression(PM[2.5] * " Emissions Normalized to 1999:" *
-                                  " Baltimore vs. Los Angeles"))
+plot <- plot + ggtitle(expression(PM[2.5] *
+                                  " Motor Vehicle Emissions Normalized to 1999:"
+                                  * " Baltimore vs. LA"))
 plot <- plot + coord_cartesian(xlim=c(1998, 2009))
 plot <- plot + scale_x_continuous(breaks=seq(1999, 2008, 3))
 plot <- plot + scale_y_continuous(breaks=c(seq(0.2, 1.2, 0.2)))
@@ -111,8 +112,8 @@ vars <- data.frame(City = c("Baltimore", "Los Angeles"))
 # 1. Coordinates to plot the text. The x and y params are the coordinates.
 # 3. The labels to be supplied. The labs vector supplies the text.
 dat <- data.frame(x = c(2004, 2003.5), y = c(1.1, 0.9), vars,
-                  labs=c("Baltimore Emissions(1999) = 409.97 tons",
-                         "Los Angeles Emissions(1999) = 6428.13 tons"))
+       labs=c("Baltimore MV Emissions(1999) = 409.97 tons\n(all monitors)",
+              "Los Angeles MV Emissions(1999) = 6428.13 tons\n(all monitors)"))
 plot <- plot + geom_text(aes(x, y, label=labs, group=NULL),
                          size = 5, data = dat)
 print(plot)
