@@ -7,6 +7,12 @@
 ## "motor vehicle sources" is any record with an EI.Sector field value that
 ## contains the string "mobile" followed by the string "road" ignoring case.
 ##
+## Sources should be subsetted to only include those that are common in each
+## of the measurement years (1999, 2002, 2005, and 2008). Subsetting was not
+## done here in order to allow the ON-ROAD measurement to show up in the plot
+## as advised in this forum thread:
+## https://class.coursera.org/exdata-031/forum/thread?thread_id=132
+##
 library(dplyr)
 library(ggplot2)
 library(scales)
@@ -34,10 +40,11 @@ g <- ggplot(mvBaltSummary,
             aes(x = factor(Year), y = Total_Emissions, fill = Road_Type))
 plot <- g + geom_bar(stat = "identity")
 plot <- plot + ggtitle(expression("Baltimore " * PM[2.5] *
-                                  " Motor Vehicle Emissions By Road Type"))
+                                  " Motor Vehicle Emissions By Road Type. " *
+                                  " (All sources included to show ON-ROAD data.)"))
 plot <- plot + labs(x = "Year")
 plot <- plot + labs(y = expression(PM[2.5] * "Emissions (in tons)"))
-plot <- plot + theme(text = element_text(size=20))
+plot <- plot + theme(text = element_text(size=12))
 plot <- plot + theme(legend.justification=c(1,1), legend.position=c(1,1))
 print(plot)
 dev.off()

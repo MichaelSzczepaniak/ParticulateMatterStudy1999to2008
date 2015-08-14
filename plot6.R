@@ -8,6 +8,12 @@
 ## "motor vehicle sources" is any record with an EI.Sector field value that
 ## contains the string "mobile" followed by the string "road" ignoring case.
 ##
+## Sources should be subsetted to only include those that are common in each
+## of the measurement years (1999, 2002, 2005, and 2008). Subsetting was not
+## done here in order to allow the ON-ROAD measurement to show up in the plot
+## as advised in this forum thread:
+## https://class.coursera.org/exdata-031/forum/thread?thread_id=132
+##
 library(dplyr)
 library(ggplot2)
 
@@ -112,8 +118,8 @@ vars <- data.frame(City = c("Baltimore", "Los Angeles"))
 # 1. Coordinates to plot the text. The x and y params are the coordinates.
 # 3. The labels to be supplied. The labs vector supplies the text.
 dat <- data.frame(x = c(2004, 2003.5), y = c(1.1, 0.9), vars,
-       labs=c("Baltimore MV Emissions(1999) = 409.97 tons\n(all monitors)",
-              "Los Angeles MV Emissions(1999) = 6428.13 tons\n(all monitors)"))
+       labs=c("Baltimore MV Emissions(1999) = 409.97 tons\n(all sources)",
+              "Los Angeles MV Emissions(1999) = 6428.13 tons\n(all sources)"))
 plot <- plot + geom_text(aes(x, y, label=labs, group=NULL),
                          size = 5, data = dat)
 print(plot)

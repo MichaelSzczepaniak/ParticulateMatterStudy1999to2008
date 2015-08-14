@@ -12,7 +12,28 @@
 library(dplyr)
 library(ggplot2)
 library(scales)
-NEI <- readRDS("summarySCC_PM25.rds")
+
+## Normalizes the records of the NEI dataframe by grabbing records with sources
+## that are common across the years 1999, 2002, 2005, and 2008.
+normalizeNEI <- function(nei) {
+    nei1999 <- filter(nei, year == 1999)
+    scc1999 <- unique(nei1999$SCC)
+    nei2002 <- filter(nei, year == 2002)
+    scc2002 <- unique(nei2002$SCC)
+    nei2005 <- filter(nei, year == 2005)
+    scc2005 <- unique(nei2005$SCC)
+    nei2008 <- filter(nei, year == 2008)
+    scc2008 <- unique(nei2008$SCC)
+    sccCommon <- intersect(scc1999, scc2002)
+    sccCommon <- intersect(sccCommon, scc2005)
+    sccCommon <- intersect(sccCommon, scc2008)
+    # sccCommon contains only the sources common to all 4 time periods
+    normalizedNEI <- filter(nei, SCC %in% sccCommon)
+    
+    return(normalizedNEI)
+}
+
+NEI <- normalizeNEI(readRDS("summarySCC_PM25.rds"))
 sourceClasses <- readRDS("Source_Classification_Code.rds")
 # get indices of coal combustion-related sources as described above
 coalCombIndices <- grep("^fuel comb -(.*)- coal$",
@@ -40,18 +61,20 @@ emissionsCombined <- arrange(emissionsCombined, desc(Source), Year)
 emissionsCombined <- mutate(emissionsCombined, Source = factor(Source))
 # generate the plot
 png(file = "plot4.png", width = 720, height = 480, units = "px")
-g <- ggplot(emissionsCombined, aes(x = Year, y = (Total_Emissions)))
+g <- ggplot(emissionsCombined, aes(x = Year, y = (Total_Emissions),
+                                   shape = Source, group = Source))
 plot <- g + geom_point(size = 4)
 plot <- plot + facet_grid(. ~ Source) + geom_line()
 plot <- plot + ggtitle(expression("Total US " * PM[2.5] *
-                                  " Emissions: Coal vs. Non-Coal Sources"))
+                                  " Emissions From Coal & Non-Coal Sources" *
+                                  " Common in each Year"))
 plot <- plot + coord_cartesian(xlim=c(1998, 2009))
 plot <- plot + scale_x_continuous(breaks=seq(1999, 2008, 3))
 # use log10 scale on y so we can better see how both groups trend
 plot <- plot + coord_trans(y="log10")
 plot <- plot + labs(y = expression(PM[2.5] * "Emissions (in tons)"))
 # make the fonts a bigger so everything is more readable
-plot <- plot + theme(text = element_text(size=20),
+plot <- plot + theme(text = element_text(size=14),
                      axis.text.x = element_text(angle=90, vjust=1))
 print(plot)  # see "No Plot Yet!" page 124 of 216 of
 # ExploratoryDataAnalysisAll.pdf (consolidate lecture slides)
