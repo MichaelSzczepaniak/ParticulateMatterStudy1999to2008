@@ -24,5 +24,6 @@ plot <- qplot(Year, TotalEmissions, data = totalEmissions,
         main = "Baltimore City PM2.5 Emissions By Year and Source Type\n(All sources included to ensure data from all 4 types are illustrated.)",
         color = Source_Type, geom = c("point", "line"),
         ylab = "PM 2.5 Emissions (tons)")
+plot <- plot + scale_x_continuous(breaks=c(1999, 2002, 2005, 2008))
 print(plot)
 dev.off()
