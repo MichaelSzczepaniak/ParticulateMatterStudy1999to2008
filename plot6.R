@@ -114,9 +114,7 @@ createPanelPlots6 <- function(file = "plot6.png", width = 720, height = 500,
     # make the fonts a bigger so everything is more readable
     plot <- plot + theme(text = element_text(size=16),
                          axis.text.x = element_text(angle=90, vjust=1))
-    plot <- plot + theme(legend.position="none") #legend.justification=c(0.5,0.5),
-#                          legend.position=c(0.5,0.5))
-    
+    plot <- plot + theme(legend.position="none")
     print(plot)
     dev.off()
 }

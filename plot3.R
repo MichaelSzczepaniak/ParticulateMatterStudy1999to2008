@@ -4,8 +4,8 @@
 ## https://github.com/MichaelSzczepaniak/ParticulateMatterStudy1999to2008
 ##
 ## Sources should be subsetted to only include those sources that are common in
-## each of the measurement years (1999, 2002, 2005, and 2008).  In order to
-## because there were no common ON-ROAD sources for 2008, a two panel plot was
+## each of the measurement years (1999, 2002, 2005, and 2008).  Because
+## there were no common ON-ROAD sources for 2008, a two panel plot was
 ## created with all sources on the left as advised in this forum thread:
 ## https://class.coursera.org/exdata-031/forum/thread?thread_id=132
 ## and with just common sources on the right.
@@ -49,6 +49,7 @@ getNeiSummary <- function(file = "summarySCC_PM25.rds") {
     return(totalEmissions)
 }
 
+## creates two facet/panel line plots of Baltimore emissions
 createPanelPlots3 <- function(file = "plot3.png", width = 720, height = 500,
                               units = "px") {
     mainTitle <- paste0("Baltimore City PM2.5 Emissions By Year and Source Type\n",
