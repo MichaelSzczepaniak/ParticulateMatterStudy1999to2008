@@ -100,10 +100,10 @@ getStackedBars <- function(emissions) {
 ## units - units for width and height: typically pixels (px)
 ## ymaxLeft - max value of the left plot y-axis
 ## ymaxRight - max value of the right plot y-axis
-createPanelPlots2 <- function(file = "plot1.png", width = 720, height = 500,
+createPanelPlots2 <- function(file = "plot2.png", width = 720, height = 500,
                              units = "px", ymaxLeft = 4.0, ymaxRight = 4.0) {
     # create/write output png: 720 x 500 pixels
-    png(file = "plot2.png", width = width, height = height, units = "px")
+    png(file = file, width = width, height = height, units = units)
     par(mfrow = c(1, 2))
     # configure pieces for stacked bars for all sources panel
     totalEmissions <- getNeiSummary(normalize = FALSE)

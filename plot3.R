@@ -54,7 +54,7 @@ createPanelPlots3 <- function(file = "plot3.png", width = 720, height = 500,
     mainTitle <- paste0("Baltimore City PM2.5 Emissions By Year and Source Type\n",
                         "(All sources included to ensure data from all 4 types",
                         " are illustrated.)")
-    png(file = "plot3.png", width = 720, height = 480, units = "px")
+    png(file = file, width = width, height = height, units = units)
     totalEmissions <- getNeiSummary()
     
     g <- ggplot(totalEmissions, aes(x=Year, y=TotalEmissions,
