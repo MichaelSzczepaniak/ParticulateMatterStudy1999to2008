@@ -12,28 +12,39 @@
 library(dplyr)
 library(ggplot2)
 
-## Summarize NEI data by year and type for Baltimore (fips = 24510)
-getNeiSummary <- function(file = "summarySCC_PM25.rds", normalize = TRUE) {
+## Summarizes NEI data by year and type for Baltimore (fips = 24510).
+## A two-level factor indicating whether all sources are used or if only
+## sources common to the reporting years (1999, 2002, 2005, 2008) were used.
+getNeiSummary <- function(file = "summarySCC_PM25.rds") {
     # save time if function has been executed already and NEI is in workspace
     if(!exists("NEI")) {
         NEI <- readRDS("summarySCC_PM25.rds")
     }
-    neiByYear <- NULL
-    if(normalize) {
-        neiNormalized <- normalizeNEI(NEI)
-        neiByYear <- group_by(neiNormalized, year, type)
-    }
-    else {
-        neiByYear <- group_by(NEI, year, type)
-    }
-    neiBaltimore <- filter(neiByYear, fips == "24510")
-    totalEmissions <- summarise(neiBaltimore,
+    # create summary from all sources first
+    neiByYearAndTypeAll <- group_by(NEI, year, type)
+    neiByYearAndTypeAll <- filter(neiByYearAndTypeAll, fips == "24510")
+    totalEmissionsAllSources <- summarise(neiByYearAndTypeAll,
                                 TotalEmissions = sum(Emissions, na.rm = TRUE))
+    
+    neiCommon <- normalizeNEI(NEI)
+    neiByYearAndTypeCommon <- group_by(neiCommon, year, type)
+    neiByYearAndTypeCommon <- filter(neiByYearAndTypeCommon, fips == "24510")
+    totalEmissionsCommonSources <- summarise(neiByYearAndTypeCommon,
+                                TotalEmissions = sum(Emissions, na.rm = TRUE))
+    # put the all source summary together with the common source summary
+    totalEmissions <- rbind(totalEmissionsAllSources,
+                            totalEmissionsCommonSources)
+    # create factor for all and common sources and append column
+    dataSource <- factor(c(rep("All Sources", nrow(totalEmissionsAllSources)),
+                           rep("Only Common Sources",
+                               nrow(totalEmissionsCommonSources))))
+    totalEmissions$Data.Source <- dataSource
+    
     # convert type to factor so ggplot2 creates a line for each
     totalEmissions <- mutate(totalEmissions, type = factor(type))
     # rename x axis source so ggplot2 uses its name for the label
     totalEmissions <- rename(totalEmissions, Year = year)
-    totalEmissions <- rename(totalEmissions, Source = type)
+    totalEmissions <- rename(totalEmissions, Source.Type = type)
     
     return(totalEmissions)
 }
@@ -44,12 +55,18 @@ createPanelPlots3 <- function(file = "plot3.png", width = 720, height = 500,
                         "(All sources included to ensure data from all 4 types",
                         " are illustrated.)")
     png(file = "plot3.png", width = 720, height = 480, units = "px")
-    totalEmissions <- getNeiSummary(normalize = FALSE)
-    plot <- qplot(Year, TotalEmissions, data = totalEmissions,
-                  main = mainTitle,
-                  color = Source, geom = c("point", "line"),
-                  ylab = "PM 2.5 Emissions (tons)")
+    totalEmissions <- getNeiSummary()
+    
+    g <- ggplot(totalEmissions, aes(x=Year, y=TotalEmissions,
+                                    shape=Source.Type, group=Source.Type))
+    plot <- g + geom_point(size = 4)
+    plot <- plot + facet_grid(. ~ Data.Source) + geom_line()
+    plot <- plot + theme(legend.position=c(0.5,0.45))
     plot <- plot + scale_x_continuous(breaks=c(1999, 2002, 2005, 2008))
+    mainTitle <- paste("Baltimore City PM2.5 Emissions By Year and Source Type",
+                       "\nfor all sources and only those sources common to",
+                       "each reporting year")
+    plot <- plot + ggtitle(mainTitle)
     print(plot)
     dev.off()
 }
