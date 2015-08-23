@@ -89,7 +89,7 @@ png(file = "plot6.png", width = 720, height = 480, units = "px")
 g <- ggplot(emissionsCombined,
             aes(x = Year, y = Normalized_Emissions, shape = City, group = City))
 plot <- g + geom_point(size = 4)
-plot <- plot + geom_smooth(size=1, linetype=3, method="lm", se=FALSE)
+#plot <- plot + geom_smooth(size=1, linetype=3, method="lm", se=FALSE)  # most folks in forum don't like this, so comment out
 plot <- plot + facet_grid(. ~ City) + geom_line()
 plot <- plot + ggtitle(expression(PM[2.5] *
                                   " Motor Vehicle Emissions Normalized to 1999:"

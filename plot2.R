@@ -6,6 +6,29 @@
 library(dplyr)
 library(RColorBrewer)
 
+## Summarize NEI data by year and type for Baltimore (fips = 24510)
+getNeiSummary <- function(file = "summarySCC_PM25.rds", normalize = TRUE) {
+    # save time if function has been executed already and NEI is in workspace
+    if(!exists("NEI")) {
+        NEI <- readRDS("summarySCC_PM25.rds")
+    }
+    neiByYear <- NULL
+    totalEmissions <- NULL
+    if(normalize) {
+        neiNormalized <- normalizeNEI(NEI)
+        neiByYear <- group_by(neiNormalized, year, type)
+    }
+    else {
+        neiByYear <- group_by(NEI, year, type)
+    }
+    neiByYear <- filter(neiByYear, fips == "24510")
+    totalEmissions <- summarise(neiByYear,
+                                TotalEmissions = sum(Emissions,
+                                                     na.rm = TRUE))
+    
+    return(totalEmissions)
+}
+
 ## Normalizes the records of the NEI dataframe by grabbing records with sources
 ## that are common across the years 1999, 2002, 2005, and 2008.
 normalizeNEI <- function(nei) {
@@ -34,53 +57,78 @@ createZeroDf <- function(type) {
                          TotalEmissions = c(0,0,0,0))
 }
 
-NEI <- readRDS("summarySCC_PM25.rds")
-normalizeNEI <- normalizeNEI(NEI)
-neiBaltimore <- filter(normalizeNEI, fips == "24510")
-neiBaltimoreByYearByType <- group_by(neiBaltimore, year, type)
-totalEmissions <- summarise(neiBaltimoreByYearByType,
-                            TotalEmissions = sum(Emissions, na.rm = TRUE))
-totEmPoint <- filter(totalEmissions, type == "POINT")
-if(length(totEmPoint$type) == 0) {
-    totEmPoint <- createZeroDf("POINT")
+##
+getStackedBars <- function(emissions) {
+    totEmPoint <- filter(emissions, type == "POINT")
+    if(length(totEmPoint$type) == 0) {
+        totEmPoint <- createZeroDf("POINT")
+    }
+    totEmNonPoint <- filter(emissions, type == "NONPOINT")
+    if(length(totEmNonPoint$type) == 0) {
+        totEmNonPoint <- createZeroDf("NONPOINT")
+    }
+    totEmOnRoad <- filter(emissions, type == "ON-ROAD")
+    if(length(totEmOnRoad$type) == 0) {
+        totEmOnRoad <- createZeroDf("ON-ROAD")
+    }
+    totEmNonRoad <- filter(emissions, type == "NON-ROAD")
+    if(length(totEmNonRoad$type) == 0) {
+        totEmNonRoad <- createZeroDf("NON-ROAD")
+    }
+    # build the matrix to be used for the stacked bar
+    emByType <- select(totEmPoint, -type)
+    emByType <- rename(emByType, pointEmissions = TotalEmissions)
+    x <- totEmNonPoint$TotalEmissions
+    emByType <- cbind(emByType, nonPointEmissions = x)
+    x <- totEmOnRoad$TotalEmissions
+    emByType <- cbind(emByType, onRoadEmissions = x)
+    x <- totEmNonRoad$TotalEmissions
+    emByType <- cbind(emByType, nonRoadEmissions = x)
+    bars <- t(as.matrix(emByType))
+    colnames(bars) <- bars[1, ]
+    bars <- bars[c(2:5), ]
+    
+    return(bars)
 }
-totEmNonPoint <- filter(totalEmissions, type == "NONPOINT")
-if(length(totEmNonPoint$type) == 0) {
-    totEmNonPoint <- createZeroDf("NONPOINT")
+
+## Creates 2 panel stacked bar plots: left plot is for all common sources,
+## right plot is for all sources.  A single sequential color brewer pallette
+## was used for both plots.
+createPanelPlots <- function(file = "plot1.png", width = 720, height = 480,
+                             units = "px", ymaxLeft = 4.0, ymaxRight = 4.0) {
+    # configure pieces for stacked bars for common sources panel
+    totalEmissions <- getNeiSummary()
+    bars <- getStackedBars(totalEmissions)
+    cnames <- c("POINT", "NONPOINT", "ON-ROAD", "NON-ROAD")
+    # create/write output png: 720 x 480 pixels
+    png(file = "plot2.png", width = 720, height = 500, units = "px")
+    par(mfrow = c(1, 2))
+    barColors <- brewer.pal(4, "Accent")  # one of the SEQUENTIAL pallettes
+    mainTitle <- paste0("Total Baltimore PM2.5 Emissions By Year & Type: \n",
+                        "Data only from sources common in each year. \n",
+                        "  No common ON-ROAD sources in 2008.")
+    barplot(bars/1000,
+            names.arg = colnames(bars),
+            ylab = "Emissions (1,000 tons PM25-PRI)",
+            xlab = "Year",
+            ylim = c(0, ymaxLeft), xpd = FALSE,
+            col = c(barColors[1], barColors[2], barColors[3], barColors[4]),
+            main = mainTitle,
+            legend = cnames)
+    # configure pieces for stacked bars for all sources panel
+    totalEmissions <- getNeiSummary(normalize = FALSE)
+    bars <- getStackedBars(totalEmissions)
+    # barColors <- brewer.pal(4, "Dark2")  # one of the SEQUENTIAL pallettes
+    mainTitle <- paste0("Total Baltimore PM2.5 Emissions By Year & Type\n",
+                        "(all sources)")
+    barplot(bars/1000,
+            names.arg = colnames(bars),
+            ylab = "Emissions (1,000 tons PM25-PRI)",
+            xlab = "Year",
+            ylim = c(0, ymaxRight), xpd = FALSE,
+            col = c(barColors[1], barColors[2], barColors[3], barColors[4]),
+            main = mainTitle,
+            legend = cnames)
+    
+    dev.off()
 }
-totEmOnRoad <- filter(totalEmissions, type == "ON-ROAD")
-if(length(totEmOnRoad$type) == 0) {
-    totEmOnRoad <- createZeroDf("ON-ROAD")
-}
-totEmNonRoad <- filter(totalEmissions, type == "NON-ROAD")
-if(length(totEmNonRoad$type) == 0) {
-    totEmNonRoad <- createZeroDf("NON-ROAD")
-}
-# build the matrix to be used for the stacked bar
-emByType <- select(totEmPoint, -type)
-emByType <- rename(emByType, pointEmissions = TotalEmissions)
-x <- totEmNonPoint$TotalEmissions
-emByType <- cbind(emByType, nonPointEmissions = x)
-x <- totEmOnRoad$TotalEmissions
-emByType <- cbind(emByType, onRoadEmissions = x)
-x <- totEmNonRoad$TotalEmissions
-emByType <- cbind(emByType, nonRoadEmissions = x)
-bars <- t(as.matrix(emByType))
-colnames(bars) <- bars[1, ]
-bars <- bars[c(2:5), ]
-cnames <- c("POINT", "NONPOINT", "ON-ROAD", "NON-ROAD")
-# create/write output png: 720 x 480 pixels
-png(file = "plot2.png", width = 720, height = 480, units = "px")
-barColors <- brewer.pal(4, "Dark2")  # one of the SEQUENTIAL pallettes
-mainTitle <- paste0("Total Baltimore PM2.5 Emissions By Year and Type: \n",
-                    "Data only from sources common in each year. ",
-                    "Note: No common ON-ROAD sources in 2008.")
-barplot(bars/1000,
-        names.arg = emByType$year,
-        ylab = "Emissions (1,000 tons PM25-PRI)",
-        xlab = "Year",
-        ylim = c(0, 3.0), xpd = FALSE,
-        col = c(barColors[1], barColors[2], barColors[3], barColors[4]),
-        main = mainTitle,
-        legend = cnames)
-dev.off()

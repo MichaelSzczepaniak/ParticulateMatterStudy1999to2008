@@ -5,6 +5,27 @@
 ##
 library(dplyr)
 
+getNeiSummary <- function(file = "summarySCC_PM25.rds", normalize = TRUE) {
+    # save time if function has been executed already and NEI is in workspace
+    if(!exists("NEI")) {
+        NEI <- readRDS("summarySCC_PM25.rds")
+    }
+    neiByYear <- NULL
+    totalEmissions <- NULL
+    if(normalize) {
+        neiNormalized <- normalizeNEI(NEI)
+        neiByYear <- group_by(neiNormalized, year)
+    }
+    else {
+        neiByYear <- group_by(NEI, year)
+    }
+    totalEmissions <- summarise(neiByYear,
+                                TotalEmissions = sum(Emissions,
+                                                     na.rm = TRUE))
+    
+    return(totalEmissions)
+}
+
 ## Normalizes the records of the NEI dataframe by grabbing records with sources
 ## that are common across the years 1999, 2002, 2005, and 2008.
 normalizeNEI <- function(nei) {
@@ -25,18 +46,30 @@ normalizeNEI <- function(nei) {
     return(normalizedNEI)
 }
 
-NEI <- readRDS("summarySCC_PM25.rds")
-neiNormalized <- normalizeNEI(NEI)
-neiByYear <- group_by(neiNormalized, year)
-totalEmissions <- summarise(neiByYear,
-                            TotalEmissions = sum(Emissions, na.rm = TRUE))
-# create/write output png: 720 x 480 pixels
-png(file = "plot1.png", width = 720, height = 480, units = "px")
-barplot(totalEmissions$TotalEmissions/1000000,
-        names.arg = totalEmissions$year,
-        ylab = "Emissions (1,000,000 tons PM25-PRI)",
-        xlab = "Year",
-        ylim = c(2, 7), xpd = FALSE,
-        col = "wheat1",
-        main = "Total US PM25 Emissions By Year\n(from sources common to each year)")
-dev.off()
+createPanelPlots <- function(file = "plot1.png", width = 720, height = 480,
+                             units = "px", ymaxLeft = 8, ymaxRight = 8) {
+    # create/write output png: 720 x 480 pixels
+    png(file = file, width = width, height = height, units = units)
+    par(mfrow = c(1, 2))
+    totalEmissions <- getNeiSummary()
+    barplot(totalEmissions$TotalEmissions/1000000,
+            names.arg = totalEmissions$year,
+            ylab = "Emissions (1,000,000 tons PM25-PRI)",
+            xlab = "Year",
+            ylim = c(2, ymaxLeft), xpd = FALSE,
+            col = "wheat1",
+            main = "Total US PM2.5 Emissions By Year\n(from sources common to each year)")
+    # add plot for all sources
+    neiByYearAllSources <- group_by(NEI, year)
+    totalEmissions <- getNeiSummary(normalize = FALSE)
+    barplot(totalEmissions$TotalEmissions/1000000,
+            names.arg = totalEmissions$year,
+            ylab = "Emissions (1,000,000 tons PM25-PRI)",
+            xlab = "Year",
+            ylim = c(2, ymaxRight), xpd = FALSE,
+            col = "wheat3",
+            main = "Total US PM2.5 Emissions By Year\n(all sources)")
+    dev.off()
+}
+
+
