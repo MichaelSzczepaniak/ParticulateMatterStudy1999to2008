@@ -5,6 +5,7 @@
 ##
 library(dplyr)
 
+## Builds the summary of total emissions by year
 getNeiSummary <- function(file = "summarySCC_PM25.rds", normalize = TRUE) {
     # save time if function has been executed already and NEI is in workspace
     if(!exists("NEI")) {
@@ -46,21 +47,14 @@ normalizeNEI <- function(nei) {
     return(normalizedNEI)
 }
 
-createPanelPlots <- function(file = "plot1.png", width = 720, height = 480,
+# Creates the two panel barplots of the US emission totals: left plot is from
+# sources that are common to all 4 time period, right plot is from all sources
+createPanelPlots1 <- function(file = "plot1.png", width = 720, height = 480,
                              units = "px", ymaxLeft = 8, ymaxRight = 8) {
     # create/write output png: 720 x 480 pixels
     png(file = file, width = width, height = height, units = units)
     par(mfrow = c(1, 2))
-    totalEmissions <- getNeiSummary()
-    barplot(totalEmissions$TotalEmissions/1000000,
-            names.arg = totalEmissions$year,
-            ylab = "Emissions (1,000,000 tons PM25-PRI)",
-            xlab = "Year",
-            ylim = c(2, ymaxLeft), xpd = FALSE,
-            col = "wheat1",
-            main = "Total US PM2.5 Emissions By Year\n(from sources common to each year)")
-    # add plot for all sources
-    neiByYearAllSources <- group_by(NEI, year)
+    # add plot which uses all sources
     totalEmissions <- getNeiSummary(normalize = FALSE)
     barplot(totalEmissions$TotalEmissions/1000000,
             names.arg = totalEmissions$year,
@@ -69,7 +63,17 @@ createPanelPlots <- function(file = "plot1.png", width = 720, height = 480,
             ylim = c(2, ymaxRight), xpd = FALSE,
             col = "wheat3",
             main = "Total US PM2.5 Emissions By Year\n(all sources)")
+    # add plot which only uses common sources
+    totalEmissions <- getNeiSummary()
+    barplot(totalEmissions$TotalEmissions/1000000,
+            names.arg = totalEmissions$year,
+            ylab = "Emissions (1,000,000 tons PM25-PRI)",
+            xlab = "Year",
+            ylim = c(2, ymaxLeft), xpd = FALSE,
+            col = "wheat1",
+            main = "Total US PM2.5 Emissions By Year\n(from sources common to each year)")
+
     dev.off()
 }
 
-
+createPanelPlots1()

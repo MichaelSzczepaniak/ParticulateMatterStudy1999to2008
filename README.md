@@ -35,9 +35,8 @@ The following descriptions of the 6 variables in the dataset are as follows:
 <ol>
 <li>Have <b>total</b> emissions from PM2.5 decreased in the United States from 1999 to 2008?
   <ul>
-    <li>Using the base plotting system, a plot showing the total PM2.5 emissions from all sources for each of the years 1999, 2002, 2005, and 2008 was constructed as shown in <b><a href="#id-plot1">Plot 1</a></b> below.</li>
+    <li>Using the base plotting system, a two panel plot showing the total PM2.5 emissions from all sources and from only sources that were common for the reporting years 1999, 2002, 2005, and 2008 was constructed as shown in <b><a href="#id-plot1">Plot 1</a></b> below.</li>
     <li><b><a href="#id-plot1">Plot 1</a></b> suggests that PM25 emissions have decreased every 3 years from 1999 to 2008.</li>
-    <li>To make the comparison more meaningful, only records with sources that were common across the years 1999, 2002, 2005, and 2008 were used.</li>
   </ul>
 </li>
 <li>Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == "24510") from 1999 to 2008? Use the base plotting system to make a plot answering this question.
@@ -134,7 +133,7 @@ Over 90% of the **Emissions** values are < 1.
 <div id='id-making-plots'/>
 ## Making Plots
 
-The overall goal of this project is to explore the National Emissions Inventory database and see what it say about fine particulate matter pollution in the United states over the 10-year period 1999 - 2008. 
+The overall goal of this project was to explore the National Emissions Inventory database and see what it say about fine particulate matter pollution in the United states over the 10-year period 1999 - 2008. 
 
 
 Each plot was construction and saved as a PNG file.
