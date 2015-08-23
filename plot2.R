@@ -57,7 +57,8 @@ createZeroDf <- function(type) {
                          TotalEmissions = c(0,0,0,0))
 }
 
-##
+## Creates the matrix used to build the stack bars
+## emission - the dataframe summarizing NEI by year, type, Total Emissions
 getStackedBars <- function(emissions) {
     totEmPoint <- filter(emissions, type == "POINT")
     if(length(totEmPoint$type) == 0) {
@@ -94,16 +95,39 @@ getStackedBars <- function(emissions) {
 ## Creates 2 panel stacked bar plots: left plot is for all common sources,
 ## right plot is for all sources.  A single sequential color brewer pallette
 ## was used for both plots.
-createPanelPlots <- function(file = "plot1.png", width = 720, height = 480,
+## file - output plot file: a png of width x height units (typically px)
+## width - width of the output plot image in units of units (typically px)
+## height - height of the output plot image in units of units (typically px)
+## units - units for width and height: typically pixels (px)
+## ymaxLeft - max value of the left plot y-axis
+## ymaxRight - max value of the right plot y-axis
+createPanelPlots2 <- function(file = "plot1.png", width = 720, height = 480,
                              units = "px", ymaxLeft = 4.0, ymaxRight = 4.0) {
-    # configure pieces for stacked bars for common sources panel
-    totalEmissions <- getNeiSummary()
-    bars <- getStackedBars(totalEmissions)
-    cnames <- c("POINT", "NONPOINT", "ON-ROAD", "NON-ROAD")
-    # create/write output png: 720 x 480 pixels
+    # create/write output png: 720 x 500 pixels
     png(file = "plot2.png", width = 720, height = 500, units = "px")
     par(mfrow = c(1, 2))
+    # configure pieces for stacked bars for all sources panel
+    totalEmissions <- getNeiSummary(normalize = FALSE)
+    bars <- getStackedBars(totalEmissions)
+    cnames <- c("POINT", "NONPOINT", "ON-ROAD", "NON-ROAD")
     barColors <- brewer.pal(4, "Accent")  # one of the SEQUENTIAL pallettes
+    mainTitle <- paste0("Total Baltimore PM2.5 Emissions By Year & Type\n",
+                        "(all sources)")
+    barplot(bars/1000,
+            names.arg = colnames(bars),
+            ylab = "Emissions (1,000 tons PM25-PRI)",
+            xlab = "Year",
+            ylim = c(0, ymaxRight), xpd = FALSE,
+            col = c(barColors[1], barColors[2], barColors[3], barColors[4]),
+            main = mainTitle,
+            legend = cnames)
+    # configure pieces for stacked bars having sources common for each
+    # reporting year
+    totalEmissions <- getNeiSummary()
+    bars <- getStackedBars(totalEmissions)
+    # same names used as first panel plot
+    # Uncomment next line if want different pallettes for each panel
+    # barColors <- brewer.pal(4, "Dark2")
     mainTitle <- paste0("Total Baltimore PM2.5 Emissions By Year & Type: \n",
                         "Data only from sources common in each year. \n",
                         "  No common ON-ROAD sources in 2008.")
@@ -115,20 +139,7 @@ createPanelPlots <- function(file = "plot1.png", width = 720, height = 480,
             col = c(barColors[1], barColors[2], barColors[3], barColors[4]),
             main = mainTitle,
             legend = cnames)
-    # configure pieces for stacked bars for all sources panel
-    totalEmissions <- getNeiSummary(normalize = FALSE)
-    bars <- getStackedBars(totalEmissions)
-    # barColors <- brewer.pal(4, "Dark2")  # one of the SEQUENTIAL pallettes
-    mainTitle <- paste0("Total Baltimore PM2.5 Emissions By Year & Type\n",
-                        "(all sources)")
-    barplot(bars/1000,
-            names.arg = colnames(bars),
-            ylab = "Emissions (1,000 tons PM25-PRI)",
-            xlab = "Year",
-            ylim = c(0, ymaxRight), xpd = FALSE,
-            col = c(barColors[1], barColors[2], barColors[3], barColors[4]),
-            main = mainTitle,
-            legend = cnames)
-    
     dev.off()
 }
+
+createPanelPlots2()

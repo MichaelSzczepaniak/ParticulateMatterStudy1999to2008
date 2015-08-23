@@ -47,8 +47,14 @@ normalizeNEI <- function(nei) {
     return(normalizedNEI)
 }
 
-# Creates the two panel barplots of the US emission totals: left plot is from
-# sources that are common to all 4 time period, right plot is from all sources
+## Creates the two panel barplots of the US emission totals: left plot is from
+## sources that are common to all 4 time period, right plot is from all sources
+## file - output plot file: a png of width x height units (typically px)
+## width - width of the output plot image in units of units (typically px)
+## height - height of the output plot image in units of units (typically px)
+## units - units for width and height: typically pixels (px)
+## ymaxLeft - max value of the left plot y-axis
+## ymaxRight - max value of the right plot y-axis
 createPanelPlots1 <- function(file = "plot1.png", width = 720, height = 480,
                              units = "px", ymaxLeft = 8, ymaxRight = 8) {
     # create/write output png: 720 x 480 pixels
